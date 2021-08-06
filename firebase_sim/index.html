@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Sample CRUD Firebase Javascript - 01 Read Data</title>
+        <!-- <link rel="stylesheet" href="style.css" /> -->
+    </head>
+    <body>
+        <!-- <form action=""> -->
+            Name <input id="namebox" type="text"> <br><br>
+            Roll No <input id="rollbox" type="text"><br><br>
+            Sec <input id="secbox" type="text"><br><br>
+            Gender <input id="genbox" type="text"><br><br>
+            <br><br>
+            <button id="insert">Insert</button>
+            <button id="read">read</button>
+            <button id="update">Update</button>
+            <button id="delete">delete</button>
+        <!-- </form> -->
+        <!-- <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script> -->
+        <!-- <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-analytics.js"></script> -->
+        <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
+        <script id="main">
+            var firebaseConfig = {
+                apiKey: "AIzaSyBqH2os1YuOqmKH_jimht5UI-Osy4YUJAQ",
+                authDomain: "crud-413e5.firebaseapp.com",
+                databaseURL: "https://crud-413e5-default-rtdb.firebaseio.com",
+                projectId: "crud-413e5",
+                storageBucket: "crud-413e5.appspot.com",
+                messagingSenderId: "336249978171",
+                appId: "1:336249978171:web:a70c3aa707b386462b0b1e",
+                measurementId: "G-TZXNL0N8XX"
+            };
+  // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            var name,rollV,secV,genV;
+            function Ready(){
+                name=document.getElementById("namebox").value;
+                rollV=document.getElementById("rollbox").value;
+                secV=document.getElementById("secbox").value;
+                genV=document.getElementById("genbox").value;
+            }
+
+            document.getElementById('insert').onclick=()=>{
+                Ready();
+                firebase.database().ref('student').child(rollV).set({
+                    Name:name,
+                    Section:secV,
+                    Gender:genV
+                }).then(()=>{
+                    alert("Inserted Successfully");
+                }).catch(()=>{
+                    console.log("Got F");
+                })
+            }
+            document.getElementById('read').onclick=()=>{
+                Ready();
+                firebase.database().ref('student/'+rollV).on('value',function(snap){
+                    document.getElementById('namebox').value=snap.val().Name;
+                    document.getElementById('secbox').value=snap.val().Section;
+                    document.getElementById('genbox').value=snap.val().Gender;
+                }).then(()=>{
+                    console.log("Updated Successfully");
+                }).catch(()=>{
+                    console.log("Got F from read");
+                })
+            }
+            document.getElementById('update').onclick=()=>{
+                Ready();
+                firebase.database().ref('student/'+rollV).update({
+                    Name:name,
+                    Section:secV,
+                    Gender:genV
+                }).then(()=>{
+                    console.log("updated Successfully");
+                }).catch(()=>{
+                    console.log("Got F from update");
+                })
+            }
+            document.getElementById('delete').onclick=()=>{
+                Ready();
+                firebase.database().ref('student/'+rollV).remove().then(()=>{
+                    console.log("deleted Successfully");
+                }).catch(()=>{
+                    console.log("Got F from update");
+                })
+            }
+        </script>
+    </body>
+</html>
